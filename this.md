@@ -1,4 +1,4 @@
-# Creative Design Project
+# Creative Design Project 2
 
 ## Overview
 This document describes the creative SVG illustration project featuring modern design elements and gradient aesthetics.

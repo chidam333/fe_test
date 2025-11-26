@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOL Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin: 0;
+            padding: 50px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: bounce 2s infinite;
+        }
+        
+        p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .emoji {
+            font-size: 3rem;
+            margin: 20px;
+            animation: spin 3s linear infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+        
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .buttons {
+            margin: 30px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .fun-button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .fun-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .fun-button:active {
+            transform: translateY(0px);
+        }
+        
+        .fun-button.laugh {
+            background: linear-gradient(45deg, #ff9ff3, #f368e0);
+        }
+        
+        .fun-button.party {
+            background: linear-gradient(45deg, #48cae4, #023e8a);
+        }
+        
+        .fun-button.crazy {
+            background: linear-gradient(45deg, #06ffa5, #1cb5e0);
+        }
+        
+        .fun-button.reset {
+            background: linear-gradient(45deg, #ff7675, #fd79a8);
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .rainbow {
+            animation: rainbow 2s linear infinite;
+        }
+        
+        @keyframes rainbow {
+            0% { color: #ff0000; }
+            16% { color: #ff8000; }
+            33% { color: #ffff00; }
+            50% { color: #00ff00; }
+            66% { color: #0080ff; }
+            83% { color: #8000ff; }
+            100% { color: #ff0000; }
+        }
+        
+        .party-mode {
+            animation: party 0.5s infinite;
+        }
+        
+        @keyframes party {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <h1 id="mainTitle">LOL! 😂</h1>
+        <p id="subtitle">Laugh Out Loud!</p>
+        <div class="emoji" id="mainEmoji">🤣</div>
+        
+        <div class="buttons">
+            <button class="fun-button laugh" onclick="laughButton()">😂 Laugh More!</button>
+            <button class="fun-button party" onclick="partyMode()">🎉 Party Time!</button>
+            <button class="fun-button crazy" onclick="goWild()">🤪 Go Wild!</button>
+            <button class="fun-button reset" onclick="resetPage()">🔄 Reset</button>
+        </div>
+        
+        <p id="funMessage">Click the buttons for more fun!</p>
+    </div>
+    
+    <script>
+        // Audio context for sound effects
+        let audioContext;
+        
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        
+        // Function to create beep sounds
+        function playBeep(frequency = 440, duration = 200, type = 'sine') {
+            initAudio();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration / 1000);
+        }
+        
+        // Play a melody
+        function playMelody() {
+            const notes = [523, 659, 784, 1047]; // C, E, G, C
+            notes.forEach((note, index) => {
+                setTimeout(() => playBeep(note, 300, 'triangle'), index * 200);
+            });
+        }
+        
+        // Laugh button function
+        function laughButton() {
+            const emojis = ['😂', '🤣', '😆', '😄', '😁', '🤪'];
+            const messages = [
+                'HAHAHA! 😂',
+                'That\'s hilarious! 🤣',
+                'LOL! Can\'t stop laughing! 😆',
+                'This is so funny! 😄',
+                'You\'re cracking me up! 😁'
+            ];
+            
+            document.getElementById('mainEmoji').textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            document.getElementById('funMessage').textContent = messages[Math.floor(Math.random() * messages.length)];
+            document.getElementById('container').classList.add('shake');
+            
+            // Play laugh sound effect
+            playBeep(800, 100, 'square');
+            setTimeout(() => playBeep(600, 150, 'square'), 200);
+            setTimeout(() => playBeep(700, 100, 'square'), 400);
+            
+            setTimeout(() => {
+                document.getElementById('container').classList.remove('shake');
+            }, 500);
+        }
+        
+        // Party mode function
+        function partyMode() {
+            const title = document.getElementById('mainTitle');
+            const subtitle = document.getElementById('subtitle');
+            const container = document.getElementById('container');
+            
+            title.classList.add('rainbow');
+            subtitle.textContent = '🎉 PARTY TIME! 🎉';
+            document.getElementById('mainEmoji').textContent = '🥳';
+            document.getElementById('funMessage').textContent = 'Let\'s celebrate! 🎊🎈🎉';
+            
+            // Play party melody
+            playMelody();
+            
+            // Add party background effect
+            document.body.style.background = 'linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #00ff00, #0080ff, #8000ff)';
+            document.body.style.backgroundSize = '400% 400%';
+            document.body.classList.add('party-mode');
+        }
+        
+        // Go wild function
+        function goWild() {
+            const crazyEmojis = ['🤪', '🤯', '🥴', '😵‍💫', '🤠', '🤖', '👽', '🤡'];
+            const crazyMessages = [
+                'GOING WILD! 🤪',
+                'CRAZY MODE ACTIVATED! 🤯',
+                'TOTALLY BONKERS! 🥴',
+                'MIND = BLOWN! 😵‍💫',
+                'WILD WEST! 🤠',
+                'ROBOT DANCE! 🤖'
+            ];
+            
+            // Rapid emoji changes
+            let counter = 0;
+            const wildInterval = setInterval(() => {
+                document.getElementById('mainEmoji').textContent = crazyEmojis[Math.floor(Math.random() * crazyEmojis.length)];
+                document.getElementById('funMessage').textContent = crazyMessages[Math.floor(Math.random() * crazyMessages.length)];
+                
+                // Random sound effects
+                playBeep(Math.random() * 800 + 200, 100, 'sawtooth');
+                
+                counter++;
+                if (counter > 10) {
+                    clearInterval(wildInterval);
+                }
+            }, 200);
+            
+            // Make everything shake
+            document.getElementById('container').style.animation = 'shake 0.1s infinite';
+            setTimeout(() => {
+                document.getElementById('container').style.animation = '';
+            }, 2000);
+        }
+        
+        // Reset function
+        function resetPage() {
+            document.getElementById('mainTitle').textContent = 'LOL! 😂';
+            document.getElementById('mainTitle').classList.remove('rainbow');
+            document.getElementById('subtitle').textContent = 'Laugh Out Loud!';
+            document.getElementById('mainEmoji').textContent = '🤣';
+            document.getElementById('funMessage').textContent = 'Click the buttons for more fun!';
+            
+            // Reset background
+            document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            document.body.classList.remove('party-mode');
+            document.body.style.backgroundSize = 'auto';
+            
+            // Reset sound
+            playBeep(440, 300, 'sine');
+        }
+        
+        // Add click sound to all buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.fun-button');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    playBeep(880, 50, 'square');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
